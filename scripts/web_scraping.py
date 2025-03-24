@@ -10,6 +10,7 @@ class WebScraper:
         self.url = url
         self.soup = None
         self.data = None
+        self.webscrape_df = None
         
     def fetch_data(self):
         response = requests.get(self.url)
@@ -115,4 +116,6 @@ class WebScraper:
                     #Booster Landing
                     booster_landing = self.landing_status(row[8])
                     self.data['Booster landing'].append(booster_landing)
+                    
+                    self.webscrape_df = pd.DataFrame(self.data)
                     
