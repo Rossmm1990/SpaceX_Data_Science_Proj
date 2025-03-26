@@ -75,7 +75,6 @@ class API_call:
         data['cores'] = data['cores'].map(lambda x: x[0] if x else None)
         data['payloads'] = data['payloads'].map(lambda x: x[0] if x else None)
         
-        data['date'] = pd.to_datetime(data['date_utc']).dt.date
         
         self.cleaned_df = {}
         
@@ -95,7 +94,7 @@ class API_call:
         self.cleaned_df['Serial'] = []
         self.cleaned_df['Longitude'] = []
         self.cleaned_df['Latitude'] = []
-        self.cleaned_df['Date'] = data['date']
+        self.cleaned_df['Date'] = data['date_utc']
         
         self.getBoosterVersion(data)
         
