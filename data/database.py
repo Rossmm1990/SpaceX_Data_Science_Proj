@@ -54,6 +54,14 @@ class CreateTable:
                 return 'FLOAT'
             except ValueError:
                 return 'TEXT'
+            
+    def check_table_exists(self, table_check):
+        query = sql.SQL('''SELECT EXISTS (
+            SELECT FROM information_schema.tables
+            WHERE table_schema = 'public' AND table_name = %s)''')
+        self.cur.execute(query, (table_check,))
+        exists = self.cur.fetchone()[0]
+        return exists
         
         
     def create_table(self):
@@ -61,43 +69,45 @@ class CreateTable:
             table_name = os.path.basename(filename).replace('.csv', '').lower()
             print(f'processing: {table_name}')
             
-            with open(filename, 'r', encoding='utf-8') as file:
-                self.cur.execute(sql.SQL('DROP TABLE IF EXISTS {table};').format(
-                    table=sql.Identifier(table_name)
-                ))
-                create_query = sql.SQL('CREATE TABLE {table} (\n').format(
-                    table=sql.Identifier(table_name)
-                )
-                reader = csv.DictReader(file)
-                header = reader.fieldnames
-                sample_data = [row for _, row in zip(range(20), reader)]
-                
-                types = []
-                
-                for col in header:
-                    normalized_col = self.normalize_column_name(col)
-                    values = [row[col] for row in sample_data if col in row]
-                    inferred_type = self.infer_column_type(values)
-                    types.append((normalized_col, inferred_type))
-                    
-                columns = [
-                    sql.SQL('{} {}').format(sql.Identifier(name), sql.SQL(dtype))
-                    for name, dtype in types
-                ]              
-                create_query += sql.SQL(',\n').join(columns)
-                create_query += sql.SQL('\n)')
-                self.cur.execute("SELECT current_user;")
-                self.cur.execute(create_query)
-                self.conn.commit()
+            if self.check_table_exists(table_name):
+                print(f"Table {table_name} exists, skipping creation")
+                continue
+            else:
             
-            with open(filename, 'r', encoding='utf-8') as f:  
-                copy_sql = sql.SQL("""
-                    COPY {table} FROM STDIN WITH (FORMAT CSV, HEADER, DELIMITER ',', NULL '') 
-                    """).format(table=sql.Identifier(table_name))
-                self.cur.copy_expert(copy_sql, f)
-                self.conn.commit()
-                self.cur.execute(sql.SQL("SELECT COUNT(*) FROM {table}").format(table=sql.Identifier(table_name)))
-                print(f"{table_name} now has {self.cur.fetchone()[0]} rows.")
+                with open(filename, 'r', encoding='utf-8') as file:
+                    create_query = sql.SQL('CREATE TABLE {table} (\n').format(
+                        table=sql.Identifier(table_name)
+                    )
+                    reader = csv.DictReader(file)
+                    header = reader.fieldnames
+                    sample_data = [row for _, row in zip(range(20), reader)]
+                    
+                    types = []
+                    
+                    for col in header:
+                        normalized_col = self.normalize_column_name(col)
+                        values = [row[col] for row in sample_data if col in row]
+                        inferred_type = self.infer_column_type(values)
+                        types.append((normalized_col, inferred_type))
+                        
+                    columns = [
+                        sql.SQL('{} {}').format(sql.Identifier(name), sql.SQL(dtype))
+                        for name, dtype in types
+                    ]              
+                    create_query += sql.SQL(',\n').join(columns)
+                    create_query += sql.SQL('\n)')
+                    self.cur.execute("SELECT current_user;")
+                    self.cur.execute(create_query)
+                    self.conn.commit()
+                
+                with open(filename, 'r', encoding='utf-8') as f:  
+                    copy_sql = sql.SQL("""
+                        COPY {table} FROM STDIN WITH (FORMAT CSV, HEADER, DELIMITER ',', NULL '') 
+                        """).format(table=sql.Identifier(table_name))
+                    self.cur.copy_expert(copy_sql, f)
+                    self.conn.commit()
+                    self.cur.execute(sql.SQL("SELECT COUNT(*) FROM {table}").format(table=sql.Identifier(table_name)))
+                    print(f"{table_name} now has {self.cur.fetchone()[0]} rows.")
             
         self.cur.close()
         self.conn.close()

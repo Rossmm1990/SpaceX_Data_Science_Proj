@@ -105,7 +105,7 @@ class ManageDatabase():
                 *
             FROM
             merged_non_null{date_suffix}
-            WHERE TRIM(booster_landing) NOT IN ('No attempt', 'Uncontrolled');
+            WHERE TRIM(booster_landing) NOT IN ('No attempt', 'Uncontrolled', 'Precluded', 'No attempt\n');
             """)
 
             self.cur.execute(f"""CREATE OR REPLACE VIEW merged_cleaned{date_suffix} AS

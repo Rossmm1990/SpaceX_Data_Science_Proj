@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import unicodedata
+from datetime import date
+from pathlib import Path
 
 static_url = "https://en.wikipedia.org/w/index.php?title=List_of_Falcon_9_and_Falcon_Heavy_launches&oldid=1027686922"
 
@@ -119,3 +121,19 @@ class WebScraper:
                     
                     self.webscrape_df = pd.DataFrame(self.data)
                     
+    def save_data(self):
+        root_dir = Path(__file__).resolve().parent.parent.parent
+        raw_data_path = root_dir/'data'/'raw_data'
+        raw_data_path.mkdir(parents=True, exist_ok=True)
+
+        today = date.today().strftime("%Y_%m_%d")
+
+        csv_path = raw_data_path/f'spaceX_webscrape_data_{today}.csv'
+
+        self.webscrape_df.to_csv(csv_path, index=False)
+
+webscrape_data = WebScraper(static_url)
+
+webscrape_data.fetch_data()
+webscrape_data.extract_data()
+webscrape_data.save_data()        
