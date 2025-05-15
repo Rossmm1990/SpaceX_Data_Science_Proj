@@ -61,3 +61,13 @@ To install Project Title, follow these steps:
 │
 ├── models/ # Python scripts to train and evaluate models
 │ └── decision_tree.py # Python class that trains and evaluates decision tree model```
+
+## **Usage**
+
+1. run api_data.py and web_scraping.py to gather up to date real time SpaceX launch data
+2. run create_database to create database and upload .csv files
+3. run clean_database to clean up database and create views to query
+4. can go into notebooks/EDA and play around in eda_pandas.ipynb and eda_sql.ipynb to do data wrangling and EDA
+5. run the entire eda_pandas.ipynb to upload a clean csv file to test and train model on
+6. can go to notebooks/model_training to file model_training1 to play around with different ML models
+7. run decision_tree.py in the models folder to create and see metrics on final ML algorithm  
