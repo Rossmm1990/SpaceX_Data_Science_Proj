@@ -27,3 +27,37 @@ To install Project Title, follow these steps:
 3. Clone the Repository: **`https://github.com/rossmmorgan/SpaceX_Data_Science_Proj.git`**
 3. to install Environment run: **`conda env create -f environment.yml`**
 5. If you completed Step 2, you can run all scripts, including those that create and query the database. If you skipped Step 2, you can still run all notebooks and scripts that use the pre-generated .csv files instead of the database.  
+
+## **Project Structure**
+
+SpaceX_DataProject/
+│
+├── .env # Environment variables (excluded from version control)
+├── .gitignore # Files and folders to ignore in Git
+├── environment.yml # Conda environment configuration
+├── README.md # Project overview and installation instructions
+│
+├── config/ # (Optional) Folder for configuration files
+│
+├── data/ # Contains both raw and cleaned data
+│ ├── raw_data/ # .csv files from API and web scraping
+│ └── clean_data/ # Cleaned .csv files used for EDA and modeling
+│
+├── scripts/ 
+│ ├── pull_data/ # Scripts for API and web scraping
+│ │ ├── api_data.py # Python class for pulling and storing API data as .csv
+│ │ └── web_scraping.py # Python class for pulling and storing web-scraped data as .csv
+│ ├── manage_database/ # Scripts to work with PostgreSQL database
+│ │ ├── create_database.py # Python class for creating and uploading clean .csv file
+│ │ └── clean_database.py # Python class for cleaning database with SQL
+│ └── pycache/ 
+│
+├── notebooks/ # Jupyter notebooks for analysis and modeling
+│ ├── EDA/
+│ │ ├── eda_pandas.ipynb # EDA and data wrangling using pandas
+│ │ └── eda_sql.ipynb # EDA and data wrangling using SQL
+│ └── model_training/
+│ └── model_training1.ipynb # Testing and training different ML models
+│
+├── models/ # Python scripts to train and evaluate models
+│ └── decision_tree.py # Python class that trains and evaluates decision tree model
