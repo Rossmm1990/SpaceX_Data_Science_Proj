@@ -30,7 +30,6 @@ To install Project Title, follow these steps:
 
 ## **Project Structure**
 
-<details>
 ```SpaceX_DataProject/
 │
 ├── .env # Environment variables (excluded from version control)
@@ -62,4 +61,3 @@ To install Project Title, follow these steps:
 │
 ├── models/ # Python scripts to train and evaluate models
 │ └── decision_tree.py # Python class that trains and evaluates decision tree model```
-<details>
