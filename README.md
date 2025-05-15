@@ -16,11 +16,11 @@ To install Project Title, follow these steps:
 
 1. Install either [Download Miniconda](https://docs.conda.io/en/latest/miniconda.html) or [Download Anaconda](https://www.anaconda.com/products/distribution) to run environment
 2. Steps if you want to be able to run script to create postgresDB and query the database
-    a. Download and install the latest version of PostgreSQL from the official site:  [Download PostgreSQL](https://www.postgresql.org/download/)
-    b. Note username, password, and port (default is 5432)
-    c. After installation run: **`psql --version`** (should see something like psql (PostgreSQL) 16.x)
-    d. In SQL shell run: **`createdb spacex_project_database`** Or use pgAdmin to create it via GUI.
-    e. Create and Configure a .ENV file in root directory with below variables:
+    - Download and install the latest version of PostgreSQL from the official site:  [Download PostgreSQL](https://www.postgresql.org/download/)
+    - Note username, password, and port (default is 5432)
+    - After installation run: **`psql --version`** (should see something like psql (PostgreSQL) 16.x)
+    - In SQL shell run: **`createdb spacex_project_database`** Or use pgAdmin to create it via GUI.
+    - Create and Configure a .ENV file in root directory with below variables:
         - DB_NAME=spacex_db
         - DB_USER=your_postgres_username
         - DB_PASSWORD=your_password 
