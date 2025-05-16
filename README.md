@@ -14,9 +14,9 @@ This project pulls launch data from the SpaceX public API and scrapes additional
 
 To install Project Title, follow these steps:
 
-1. Install either [Download Miniconda](https://docs.conda.io/en/latest/miniconda.html) or [Download Anaconda](https://www.anaconda.com/products/distribution) to run environment
+1. Install either [Miniconda](https://docs.conda.io/en/latest/miniconda.html) or [Anaconda](https://www.anaconda.com/products/distribution) to run environment
 2. Steps if you want to be able to run script to create postgresDB and query the database
-    - Download and install the latest version of PostgreSQL from the official site:  [Download PostgreSQL](https://www.postgresql.org/download/)
+    - Download and install the latest version of PostgreSQL from the official site:  [PostgreSQL](https://www.postgresql.org/download/)
     - Note username, password, and port (default is 5432)
     - After installation run: **`psql --version`** (should see something like psql (PostgreSQL) 16.x)
     - In SQL shell run: **`createdb spacex_project_database`** Or use pgAdmin to create it via GUI.
@@ -66,10 +66,18 @@ SpaceX_DataProject/
 
 ## **Usage**
 
-1. run api_data.py and web_scraping.py to gather up to date real time SpaceX launch data
-2. run create_database to create database and upload .csv files
-3. run clean_database to clean up database and create views to query
-4. can go into notebooks/EDA and play around in eda_pandas.ipynb and eda_sql.ipynb to do data wrangling and EDA
-5. run the entire eda_pandas.ipynb to upload a clean csv file to test and train model on
-6. can go to notebooks/model_training to file model_training1 to play around with different ML models
-7. run decision_tree.py in the models folder to create and see metrics on final ML algorithm  
+1. Run api_data.py and web_scraping.py (located in scripts/pull_data/) to collect up-to-date SpaceX launch data and save it as .csv files.
+2. Run create_database.py (in scripts/manage_database/) to create a PostgreSQL database and upload the raw .csv files.
+3. Run clean_database.py to clean and normalize the database tables, and create SQL views for easier querying.
+4. Open eda_pandas.ipynb and eda_sql.ipynb in the notebooks/EDA/ folder to perform exploratory data analysis (EDA) using both pandas and SQL.
+5. run the entire eda_pandas.ipynb to upload a clean csv file for testing and training the model.
+6. Navigate to the notebooks/model_training/ folder and open model_training1.ipynb to experiment with different machine learning models.
+7. Run decision_tree.py in the models/ folder to train the final Decision Tree model and view evaluation metrics.
+
+## **License**
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## **Author**
+
+Project Title was created by **[Ross Morgan](https://github.com/rossmmorgan)**.
