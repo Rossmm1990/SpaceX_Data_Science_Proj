@@ -30,7 +30,8 @@ To install Project Title, follow these steps:
 
 ## **Project Structure**
 
-```SpaceX_DataProject/
+```
+SpaceX_DataProject/
 │
 ├── .env # Environment variables (excluded from version control)
 ├── .gitignore # Files and folders to ignore in Git
@@ -60,7 +61,8 @@ To install Project Title, follow these steps:
 │ └── model_training1.ipynb # Testing and training different ML models
 │
 ├── models/ # Python scripts to train and evaluate models
-│ └── decision_tree.py # Python class that trains and evaluates decision tree model```
+│ └── decision_tree.py # Python class that trains and evaluates decision tree model
+```
 
 ## **Usage**
 
