@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-import os
 from datetime import date
 from pathlib import Path
 
@@ -18,7 +17,8 @@ class API_call:
         response = requests.get(self.url)
         data = response.json()
         self.data = pd.json_normalize(data)
-                
+    
+    # Flatten out api core values             
     def getCoreData(self, data):
         for core in data['cores']:
                 if core['core'] != None:
@@ -36,6 +36,7 @@ class API_call:
                 self.cleaned_df['Legs'].append(core['legs'])
                 self.cleaned_df['LandingPad_ID'].append(core['landpad'])
                 
+   # Get landing pad data             
     def getLandingPad(self, ids):
         for id in ids:
             if id == None:
@@ -43,14 +44,15 @@ class API_call:
             else:
                 response = requests.get(f"https://api.spacexdata.com/v4/landpads/{id}").json()
                 self.cleaned_df['LandingPad'].append(response['name'])
-                           
+                
+    # Filters launch data to include only records with a single core and single payload                      
     def filter_data(self):
         data = self.data
         data = data[['payloads','cores', 'flight_number', 'date_utc']]
-        #filtering out all rockets with muliple payloads and rocket boosters to make the data more uniform
+        # Converts lists (cores and payloads) into single dictionary entries
         data = data[data['cores'].map(len)==1]
         data = data[data['payloads'].map(len)==1]
-        #coverting from list to single value and making sure list is not empty
+        # Only applies to non-empty lists
         data['cores'] = data['cores'].map(lambda x: x[0] if x else None)
         
         self.cleaned_df = {}
@@ -72,7 +74,8 @@ class API_call:
         del self.cleaned_df['LandingPad_ID']
         
         self.cleaned_df = pd.DataFrame.from_dict(self.cleaned_df)
-        
+     
+    # Saves cleaned DataFrame as a timestamped CSV in the 'data/raw_data' folder   
     def save_data(self):
         root_dir = Path(__file__).resolve().parent.parent.parent
         raw_data_path = root_dir/'data'/'raw_data'
@@ -84,13 +87,14 @@ class API_call:
 
         self.cleaned_df.to_csv(csv_path, index=False)
             
-        
-
+    # Executes full pipeline: fetch, clean, and save SpaceX launch data to CSV   
+    def pull_save_data(self):
+        self.fetch_api()
+        self.filter_data()
+        self.save_data()
 
 
 
 api_data = API_call(spacex_url)
-api_data.fetch_api()
-api_data.filter_data()
-api_data.save_data()
+api_data.pull_save_data()
 
