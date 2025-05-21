@@ -19,13 +19,13 @@ To install Project Title, follow these steps:
     - Download and install the latest version of PostgreSQL from the official site:  [PostgreSQL](https://www.postgresql.org/download/)
     - Note username, password, and port (default is 5432)
     - After installation run: **`psql --version`** (should see something like psql (PostgreSQL) 16.x)
-    - In SQL shell run: **`createdb spacex_project_database`** Or use pgAdmin to create it via GUI.
+    - In SQL shell run: **`CREATE DATABASE spacex_project_database;`** Or use pgAdmin to create it via GUI.
     - Create and Configure a .ENV file in root directory with below variables:
         - DB_NAME=spacex_db
         - DB_USER=your_postgres_username
         - DB_PASSWORD=your_password 
 3. Clone the Repository: **`https://github.com/rossmmorgan/SpaceX_Data_Science_Proj.git`**
-3. to install Environment run: **`conda env create -f environment.yml`**
+3. to install Environment open Anaconda prompt and run: **`conda env create -f environment.yml`**
 5. If you completed Step 2, you can run all scripts, including those that create and query the database. If you skipped Step 2, you can still run all notebooks and scripts that use the pre-generated .csv files instead of the database.  
 
 ## **Project Structure**
