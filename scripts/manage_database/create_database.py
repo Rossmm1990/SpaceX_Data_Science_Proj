@@ -4,8 +4,10 @@ import glob
 import psycopg2
 from psycopg2 import sql
 import re
-import csv 
+import csv
 
+base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+raw_data_path = os.path.join(base_dir, 'data', 'raw_data') 
 
 load_dotenv()
 
@@ -39,6 +41,7 @@ class CreateTable:
     # - Stripping whitespace and converting to lowercase
     # - Replacing spaces with underscores
     # - Removing all non-alphanumeric characters (except underscores)    
+    
     def normalize_column_name(self, col_name):
         col = col_name.strip().lower()
         col = re.sub(r'\s+', '_', col)
@@ -130,11 +133,11 @@ class CreateTable:
         
     # Connects to the database, creates tables, and populates them with data
     def create_data_base(self):
-        spacex_database.connect()
-        spacex_database.create_table()
+        self.connect()
+        self.create_table()
         
         
-spacex_database = CreateTable('raw_data', db_password, db_username, db_name)
+spacex_database = CreateTable(raw_data_path, db_password, db_username, db_name)
 
 
 spacex_database.create_data_base()
