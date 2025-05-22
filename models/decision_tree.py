@@ -10,7 +10,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix, recall_score, accuracy_score, precision_score, f1_score
 from pathlib import Path
 
-
+# Class to run the entire Decision Tree Pipeline, from data loading to model evaluation
 class CreateDecisionTree():
     def __init__(self, csv):
         self.csv = csv
@@ -41,7 +41,8 @@ class CreateDecisionTree():
         
         csv_path = Path.cwd().parent / 'data' / 'clean_data' / self.csv
         self.df = pd.read_csv(csv_path)
-        
+    
+    # Gets the X and Y variables from the df and splits then into trainngin and test sets    
     def prep_split_df(self):
         self.df[['launch_site', 'version_booster', 'outcome', 'gridfins', 'reused', 'landingpad', 'block']] = self.df[['launch_site', 'version_booster', 'outcome', 'gridfins', 'reused', 'landingpad', 'block']].astype('category')
         self.df['date'] = pd.to_datetime(self.df['date'])
@@ -51,13 +52,17 @@ class CreateDecisionTree():
         
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.Y, test_size=0.2, random_state=42, stratify=self.Y)
     
+    # Creates the preprocessing pipeline for numeric and categorical features
     def create_preprocessor(self):
+        
+        # Pipeline for numeric features (imputes missing values with the mean and then scales them)
         numeric_feature = ['payload_mass', 'reusedcount']
         numeric_transformer = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='mean')),
             ('scaler', StandardScaler())
         ])
         
+        # Pipeline for categorical features (one-hot encodes them)
         categorical_features = ['launch_site','reused', 'block', 'landingpad']
         categorical_transformer = Pipeline(steps=[
             ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
@@ -69,28 +74,33 @@ class CreateDecisionTree():
                 ('cat', categorical_transformer, categorical_features)
             ]
         )
-        
+     
+    # Creates the decision tree model pipeline      
     def create_model(self):
         dt_pipe = dt_pipeline = Pipeline(steps=[
             ('preprocessor', self.preprocessor),
             ('classifier', DecisionTreeClassifier())
         ])
         
+        # Performs Grid Search with Cross-validation to find best hyperparameters for the model
         grid_search_dt = GridSearchCV(dt_pipe, self.param_grid, cv=self.stratified_cv, scoring='recall', error_score='raise')
         grid_search_dt.fit(self.X_train, self.y_train)
         
-        self.model = grid_search_dt .best_estimator_
+        self.model = grid_search_dt .best_estimator_ # Save the best model found by GridSearchCV
 
+    # Gets the predicted Y value to get model reports
     def get_y_pred(self):
         self.y_pred = self.model.predict(self.X_test)
-        
+    
+    # Generates and prints evaluation metrics 
     def get_model_report(self):
         print('Test accuracy:', accuracy_score(self.y_test, self.y_pred))
         print('Test recall:', recall_score(self.y_test, self.y_pred))
         print('Test precision:', precision_score(self.y_test, self.y_pred))
         print('Test f1_score:', f1_score(self.y_test, self.y_pred))
         print('confusion matrix:', confusion_matrix(self.y_test, self.y_pred))
-        
+    
+    # Running the pipeline with a sample CSV file   
     def run_all(self):
         self.create_df()
         self.prep_split_df()
